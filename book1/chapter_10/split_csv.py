@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-""" This script splits an input csv file into multiple csv files based
-on the row limit split argument."""
+''' This script splits an input csv file into multiple csv files based
+on the row limit split argument.'''
 
 import argparse
 import csv
