@@ -47,6 +47,9 @@ def write_chunk(csv_reader, header, row_limit, chunk_num, out_file_base):
         for line in chunk:
             csv_writer.writerow(line)
 
+    print "File name: {}".format(out_filename)
+    print "# of rows: {}".format(len(chunk))
+
 def write_csv_chunks(input_file, output_file_base, row_limit):
     ''' Write out input_file in row_limit sized chunks to files named using the
     base name output_file_base. '''
