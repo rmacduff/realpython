@@ -5,6 +5,7 @@ on the row limit split argument."""
 import argparse
 import csv
 import os
+import sys
 
 def file_readable(input_file):
     """ Returns input_file if file exists and is readable """
@@ -14,15 +15,13 @@ def file_readable(input_file):
         msg = "{} does not exist or is not readable".format(input_file)
         raise argparse.ArgumentTypeError(msg)
 
-def validate_split_lines(row_limit, input_file):
-    """ Returns row_limit as an int if less than the number of lines
-    in input_file."""
-    line_count = file_line_count(input_file)
-    if row_limit <= line_count:
-        return row_limit
-    else:
+def validate_row_limit(parser, row_limit, input_file):
+    ''' Return None if row_limit is greater than the number of non-header lines
+    in the csv input_file.  Set parser error message and exit otherwise. '''
+    if row_limit > file_line_count(input_file) - 1:
         msg = "Row limit (-r) is greater then the number of lines in the file"
-        raise argparse.ArgumentTypeError(msg)
+        parser.error(msg)
+        sys.exit(1)
 
 def file_line_count(filename):
     ''' Return the number of lines in filename '''
@@ -79,6 +78,8 @@ def main():
                         required=True,
                         type=int,
                         help='row limit to split')
+
+    validate_row_limit(parser, parser.parse_args().row_limit, parser.parse_args().input_file)
 
     write_csv_chunks(parser.parse_args().input_file,
                      parser.parse_args().output_file_base,
