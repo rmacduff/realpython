@@ -7,8 +7,8 @@ import csv
 import os
 import sys
 
-def file_readable(input_file):
-    """ Returns input_file if file exists and is readable """
+def validate_file_readable(input_file):
+    ''' Returns input_file if file exists and is readable. '''
     if os.path.isfile(input_file) and os.access(input_file, os.R_OK):
         return input_file
     else:
@@ -64,7 +64,7 @@ def main():
     parser.add_argument('-i',
                         action='store',
                         dest='input_file',
-                        type=file_readable,
+                        type=validate_file_readable,
                         required=True,
                         help='input file name')
     parser.add_argument('-o',
