@@ -36,9 +36,9 @@ def write_chunk(csv_reader, header, row_limit, chunk_num, out_file_base):
      base name out_file_base. '''
     chunk = []
     for idx, line in enumerate(csv_reader):
-        if idx >= row_limit:
-            break
         chunk.append(line)
+        if idx == row_limit - 1:
+            break
 
     out_filename = get_chunk_filename(out_file_base, chunk_num)
     with open(out_filename, 'wb') as csv_file:
@@ -53,8 +53,11 @@ def write_csv_chunks(input_file, output_file_base, row_limit):
     with open(input_file, 'rb') as csv_file:
         csv_reader = csv.reader(csv_file)
         header = next(csv_reader)
-        line_count = file_line_count(input_file)
-        chunk_count = line_count / row_limit
+        # Get the number of lies in input_file excluding the header
+        line_count = file_line_count(input_file) - 1
+        # Need to round up to nearest int if line_count/row_limit is not a
+        # whole number.  From http://stackoverflow.com/a/23590097
+        chunk_count = int(line_count / row_limit) + (line_count % row_limit > 0)
         for chunk_num in xrange(chunk_count):
             write_chunk(csv_reader, header, row_limit, chunk_num, output_file_base)
 
